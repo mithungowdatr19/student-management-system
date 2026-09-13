@@ -1,16 +1,5 @@
-Student Management System
-
 gunicorn
 Flask
 pandas
 matplotlib
 seaborn
-Your folder will now be
-Student Management System/
-│
-├── index.html
-├── app.py
-├── python.py
-├── insights.py
-├── data.json
-└── requirements.txt
