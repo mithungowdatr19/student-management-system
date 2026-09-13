@@ -1,6 +1,6 @@
 Student Management System
 
-
+gunicorn
 Flask
 pandas
 matplotlib
