@@ -1,0 +1,4229 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Student Management System"
+    >
+
+    <title>Student Management System</title>
+
+
+    <!-- ==========================================
+         CHART.JS
+    =========================================== -->
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/chart.js">
+    </script>
+
+
+    <!-- ==========================================
+         CSS
+    =========================================== -->
+
+    <style>
+
+        /* ==========================================
+           GLOBAL
+        =========================================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        :root {
+
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+
+            --success: #16a34a;
+            --danger: #dc2626;
+            --warning: #d97706;
+
+            --dark: #111827;
+            --dark-light: #1f2937;
+
+            --background: #f3f4f6;
+            --card: #ffffff;
+
+            --text: #111827;
+            --text-light: #6b7280;
+
+            --border: #e5e7eb;
+
+            --sidebar-width: 250px;
+
+            --radius: 12px;
+
+            --shadow:
+                0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+
+        body {
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: var(--background);
+
+            color: var(--text);
+
+            min-height: 100vh;
+        }
+
+
+        button,
+        input,
+        select {
+
+            font-family: inherit;
+        }
+
+
+        button {
+            cursor: pointer;
+        }
+
+
+        /* ==========================================
+           LAYOUT
+        =========================================== */
+
+        .app {
+
+            display: flex;
+
+            min-height: 100vh;
+        }
+
+
+        /* ==========================================
+           SIDEBAR
+        =========================================== */
+
+        .sidebar {
+
+            width: var(--sidebar-width);
+
+            background: var(--dark);
+
+            color: white;
+
+            position: fixed;
+
+            left: 0;
+            top: 0;
+            bottom: 0;
+
+            padding: 25px 15px;
+
+            z-index: 1000;
+        }
+
+
+        .logo {
+
+            text-align: center;
+
+            padding: 10px 5px 30px;
+
+            border-bottom:
+                1px solid
+                rgba(255, 255, 255, 0.1);
+
+            margin-bottom: 20px;
+        }
+
+
+        .logo-icon {
+
+            font-size: 38px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .logo h2 {
+
+            font-size: 19px;
+
+            line-height: 1.3;
+        }
+
+
+        .logo p {
+
+            font-size: 12px;
+
+            color: #9ca3af;
+
+            margin-top: 5px;
+        }
+
+
+        .nav {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 7px;
+        }
+
+
+        .nav-btn {
+
+            border: none;
+
+            background: transparent;
+
+            color: #d1d5db;
+
+            padding: 13px 15px;
+
+            border-radius: 8px;
+
+            text-align: left;
+
+            font-size: 14px;
+
+            transition: 0.2s;
+        }
+
+
+        .nav-btn:hover {
+
+            background: var(--dark-light);
+
+            color: white;
+        }
+
+
+        .nav-btn.active {
+
+            background: var(--primary);
+
+            color: white;
+        }
+
+
+        .nav-icon {
+
+            display: inline-block;
+
+            width: 25px;
+
+            font-size: 16px;
+        }
+
+
+        /* ==========================================
+           MAIN
+        =========================================== */
+
+        .main {
+
+            margin-left: var(--sidebar-width);
+
+            width:
+                calc(100% - var(--sidebar-width));
+
+            min-height: 100vh;
+        }
+
+
+        /* ==========================================
+           TOPBAR
+        =========================================== */
+
+        .topbar {
+
+            background: white;
+
+            height: 70px;
+
+            padding:
+                0 30px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            border-bottom:
+                1px solid var(--border);
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 500;
+        }
+
+
+        .topbar h1 {
+
+            font-size: 21px;
+        }
+
+
+        .topbar p {
+
+            color: var(--text-light);
+
+            font-size: 13px;
+
+            margin-top: 3px;
+        }
+
+
+        .status {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            font-size: 13px;
+
+            color: var(--success);
+        }
+
+
+        .status-dot {
+
+            width: 9px;
+
+            height: 9px;
+
+            background: var(--success);
+
+            border-radius: 50%;
+        }
+
+
+        /* ==========================================
+           CONTENT
+        =========================================== */
+
+        .content {
+
+            padding: 30px;
+
+            max-width: 1500px;
+
+            margin: auto;
+        }
+
+
+        .section {
+
+            display: none;
+
+            animation:
+                fadeIn 0.25s ease;
+        }
+
+
+        .section.active {
+
+            display: block;
+        }
+
+
+        @keyframes fadeIn {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                    translateY(5px);
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                    translateY(0);
+            }
+        }
+
+
+        /* ==========================================
+           DASHBOARD CARDS
+        =========================================== */
+
+        .stats-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(200px, 1fr)
+                );
+
+            gap: 18px;
+
+            margin-bottom: 25px;
+        }
+
+
+        .stat-card {
+
+            background: var(--card);
+
+            border-radius: var(--radius);
+
+            padding: 22px;
+
+            box-shadow: var(--shadow);
+
+            border:
+                1px solid var(--border);
+        }
+
+
+        .stat-card .icon {
+
+            font-size: 28px;
+
+            margin-bottom: 12px;
+        }
+
+
+        .stat-card h3 {
+
+            font-size: 13px;
+
+            color: var(--text-light);
+
+            font-weight: normal;
+        }
+
+
+        .stat-card .value {
+
+            font-size: 27px;
+
+            font-weight: bold;
+
+            margin-top: 5px;
+        }
+
+
+        /* ==========================================
+           CARD
+        =========================================== */
+
+        .card {
+
+            background: var(--card);
+
+            border-radius: var(--radius);
+
+            padding: 25px;
+
+            box-shadow: var(--shadow);
+
+            border:
+                1px solid var(--border);
+
+            margin-bottom: 20px;
+        }
+
+
+        .card-header {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 15px;
+
+            margin-bottom: 20px;
+        }
+
+
+        .card-header h2 {
+
+            font-size: 18px;
+        }
+
+
+        .card-header p {
+
+            color: var(--text-light);
+
+            font-size: 13px;
+
+            margin-top: 5px;
+        }
+
+
+        /* ==========================================
+           FORMS
+        =========================================== */
+
+        .form-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    2,
+                    minmax(200px, 1fr)
+                );
+
+            gap: 18px;
+        }
+
+
+        .form-group {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 7px;
+        }
+
+
+        .form-group.full {
+
+            grid-column:
+                1 / -1;
+        }
+
+
+        label {
+
+            font-size: 13px;
+
+            font-weight: bold;
+        }
+
+
+        input,
+        select {
+
+            width: 100%;
+
+            padding: 12px 13px;
+
+            border:
+                1px solid #d1d5db;
+
+            border-radius: 8px;
+
+            background: white;
+
+            outline: none;
+
+            font-size: 14px;
+
+            transition: 0.2s;
+        }
+
+
+        input:focus,
+        select:focus {
+
+            border-color:
+                var(--primary);
+
+            box-shadow:
+                0 0 0 3px
+                rgba(37, 99, 235, 0.1);
+        }
+
+
+        .input-error {
+
+            border-color:
+                var(--danger) !important;
+        }
+
+
+        .error-text {
+
+            color: var(--danger);
+
+            font-size: 12px;
+
+            display: none;
+        }
+
+
+        /* ==========================================
+           BUTTONS
+        =========================================== */
+
+        .btn {
+
+            border: none;
+
+            border-radius: 8px;
+
+            padding: 11px 17px;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            transition: 0.2s;
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 7px;
+        }
+
+
+        .btn:hover {
+
+            transform:
+                translateY(-1px);
+        }
+
+
+        .btn-primary {
+
+            background: var(--primary);
+
+            color: white;
+        }
+
+
+        .btn-primary:hover {
+
+            background:
+                var(--primary-dark);
+        }
+
+
+        .btn-danger {
+
+            background: var(--danger);
+
+            color: white;
+        }
+
+
+        .btn-secondary {
+
+            background: #e5e7eb;
+
+            color: #111827;
+        }
+
+
+        .btn-success {
+
+            background: var(--success);
+
+            color: white;
+        }
+
+
+        .form-actions {
+
+            margin-top: 22px;
+
+            display: flex;
+
+            gap: 10px;
+        }
+
+
+        /* ==========================================
+           TABLE
+        =========================================== */
+
+        .table-wrapper {
+
+            overflow-x: auto;
+        }
+
+
+        table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 700px;
+        }
+
+
+        th {
+
+            background: #f9fafb;
+
+            color: #4b5563;
+
+            font-size: 12px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.5px;
+        }
+
+
+        th,
+        td {
+
+            padding: 14px 12px;
+
+            text-align: left;
+
+            border-bottom:
+                1px solid var(--border);
+        }
+
+
+        td {
+
+            font-size: 14px;
+        }
+
+
+        tbody tr:hover {
+
+            background: #f9fafb;
+        }
+
+
+        .badge {
+
+            display: inline-block;
+
+            padding: 5px 9px;
+
+            border-radius: 20px;
+
+            background: #eff6ff;
+
+            color: var(--primary);
+
+            font-size: 12px;
+
+            font-weight: bold;
+        }
+
+
+        /* ==========================================
+           SEARCH
+        =========================================== */
+
+        .search-box {
+
+            display: flex;
+
+            gap: 10px;
+
+            max-width: 600px;
+        }
+
+
+        .search-box input {
+
+            flex: 1;
+        }
+
+
+        /* ==========================================
+           INSIGHTS
+        =========================================== */
+
+        .insight-header {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #1e3a8a,
+                    #2563eb
+                );
+
+            color: white;
+
+            border-radius: var(--radius);
+
+            padding: 25px;
+
+            margin-bottom: 20px;
+        }
+
+
+        .insight-header h2 {
+
+            font-size: 24px;
+
+            margin-bottom: 5px;
+        }
+
+
+        .insight-header p {
+
+            opacity: 0.85;
+
+            font-size: 14px;
+        }
+
+
+        .insight-stats {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(160px, 1fr)
+                );
+
+            gap: 15px;
+
+            margin-bottom: 20px;
+        }
+
+
+        .insight-stat {
+
+            background: white;
+
+            padding: 18px;
+
+            border-radius: 10px;
+
+            border:
+                1px solid var(--border);
+        }
+
+
+        .insight-stat span {
+
+            display: block;
+
+            font-size: 12px;
+
+            color: var(--text-light);
+
+            margin-bottom: 5px;
+        }
+
+
+        .insight-stat strong {
+
+            font-size: 20px;
+        }
+
+
+        .charts-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    2,
+                    minmax(300px, 1fr)
+                );
+
+            gap: 20px;
+        }
+
+
+        .chart-container {
+
+            position: relative;
+
+            height: 330px;
+        }
+
+
+        .chart-full {
+
+            grid-column:
+                1 / -1;
+        }
+
+
+        /* ==========================================
+           EMPTY STATE
+        =========================================== */
+
+        .empty {
+
+            text-align: center;
+
+            padding: 50px 20px;
+
+            color: var(--text-light);
+        }
+
+
+        .empty-icon {
+
+            font-size: 45px;
+
+            margin-bottom: 12px;
+        }
+
+
+        /* ==========================================
+           LOADING
+        =========================================== */
+
+        .loading {
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            gap: 10px;
+
+            padding: 30px;
+
+            color: var(--text-light);
+        }
+
+
+        .spinner {
+
+            width: 20px;
+
+            height: 20px;
+
+            border:
+                3px solid #ddd;
+
+            border-top-color:
+                var(--primary);
+
+            border-radius: 50%;
+
+            animation:
+                spin 0.7s linear infinite;
+        }
+
+
+        @keyframes spin {
+
+            to {
+                transform:
+                    rotate(360deg);
+            }
+        }
+
+
+        /* ==========================================
+           TOAST
+        =========================================== */
+
+        #toast-container {
+
+            position: fixed;
+
+            right: 25px;
+
+            bottom: 25px;
+
+            z-index: 5000;
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 10px;
+        }
+
+
+        .toast {
+
+            min-width: 280px;
+
+            max-width: 400px;
+
+            padding: 15px 18px;
+
+            border-radius: 9px;
+
+            background: #111827;
+
+            color: white;
+
+            box-shadow:
+                0 8px 25px
+                rgba(0, 0, 0, 0.2);
+
+            animation:
+                slideIn 0.25s ease;
+        }
+
+
+        .toast.success {
+
+            border-left:
+                4px solid var(--success);
+        }
+
+
+        .toast.error {
+
+            border-left:
+                4px solid var(--danger);
+        }
+
+
+        @keyframes slideIn {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                    translateX(20px);
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                    translateX(0);
+            }
+        }
+
+
+        /* ==========================================
+           MODAL
+        =========================================== */
+
+        .modal {
+
+            position: fixed;
+
+            inset: 0;
+
+            background:
+                rgba(0, 0, 0, 0.5);
+
+            display: none;
+
+            align-items: center;
+
+            justify-content: center;
+
+            z-index: 4000;
+
+            padding: 20px;
+        }
+
+
+        .modal.show {
+
+            display: flex;
+        }
+
+
+        .modal-content {
+
+            background: white;
+
+            border-radius: 12px;
+
+            padding: 25px;
+
+            width: 100%;
+
+            max-width: 420px;
+
+            box-shadow:
+                0 20px 50px
+                rgba(0, 0, 0, 0.2);
+        }
+
+
+        .modal-content h2 {
+
+            margin-bottom: 10px;
+        }
+
+
+        .modal-content p {
+
+            color: var(--text-light);
+
+            font-size: 14px;
+
+            line-height: 1.5;
+
+            margin-bottom: 20px;
+        }
+
+
+        .modal-actions {
+
+            display: flex;
+
+            justify-content: flex-end;
+
+            gap: 10px;
+        }
+
+
+        /* ==========================================
+           MOBILE MENU
+        =========================================== */
+
+        .mobile-menu {
+
+            display: none;
+
+            border: none;
+
+            background: transparent;
+
+            font-size: 25px;
+        }
+
+
+        /* ==========================================
+           RESPONSIVE
+        =========================================== */
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+
+                transform:
+                    translateX(-100%);
+
+                transition: 0.25s;
+            }
+
+
+            .sidebar.open {
+
+                transform:
+                    translateX(0);
+            }
+
+
+            .main {
+
+                margin-left: 0;
+
+                width: 100%;
+            }
+
+
+            .mobile-menu {
+
+                display: block;
+            }
+
+
+            .charts-grid {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+
+            .chart-full {
+
+                grid-column:
+                    auto;
+            }
+
+        }
+
+
+        @media (max-width: 650px) {
+
+            .content {
+
+                padding: 15px;
+            }
+
+
+            .topbar {
+
+                padding: 0 15px;
+            }
+
+
+            .topbar h1 {
+
+                font-size: 17px;
+            }
+
+
+            .status {
+
+                display: none;
+            }
+
+
+            .form-grid {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+
+            .form-group.full {
+
+                grid-column:
+                    auto;
+            }
+
+
+            .search-box {
+
+                flex-direction: column;
+            }
+
+
+            .form-actions {
+
+                flex-direction: column;
+            }
+
+
+            .btn {
+
+                width: 100%;
+            }
+
+
+            #toast-container {
+
+                left: 15px;
+
+                right: 15px;
+
+                bottom: 15px;
+            }
+
+
+            .toast {
+
+                min-width: 0;
+
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="app">
+
+
+    <!-- ==========================================
+         SIDEBAR
+    =========================================== -->
+
+    <aside
+        class="sidebar"
+        id="sidebar"
+    >
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                🎓
+            </div>
+
+            <h2>
+                Student Management
+            </h2>
+
+            <p>
+                Management System
+            </p>
+
+        </div>
+
+
+        <nav class="nav">
+
+            <button
+                class="nav-btn active"
+                data-section="dashboard"
+                onclick="showSection('dashboard')"
+            >
+                <span class="nav-icon">📊</span>
+                Dashboard
+            </button>
+
+
+            <button
+                class="nav-btn"
+                data-section="add"
+                onclick="showSection('add')"
+            >
+                <span class="nav-icon">➕</span>
+                Add Student
+            </button>
+
+
+            <button
+                class="nav-btn"
+                data-section="students"
+                onclick="showSection('students')"
+            >
+                <span class="nav-icon">👨‍🎓</span>
+                Students
+            </button>
+
+
+            <button
+                class="nav-btn"
+                data-section="search"
+                onclick="showSection('search')"
+            >
+                <span class="nav-icon">🔍</span>
+                Search
+            </button>
+
+
+            <button
+                class="nav-btn"
+                data-section="delete"
+                onclick="showSection('delete')"
+            >
+                <span class="nav-icon">🗑️</span>
+                Delete Student
+            </button>
+
+
+            <button
+                class="nav-btn"
+                data-section="insights"
+                onclick="showSection('insights')"
+            >
+                <span class="nav-icon">📈</span>
+                Insights
+            </button>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- ==========================================
+         MAIN
+    =========================================== -->
+
+    <main class="main">
+
+
+        <!-- ======================================
+             TOPBAR
+        ======================================= -->
+
+        <header class="topbar">
+
+            <div>
+
+                <button
+                    class="mobile-menu"
+                    onclick="toggleSidebar()"
+                >
+                    ☰
+                </button>
+
+                <h1 id="page-title">
+                    Dashboard
+                </h1>
+
+                <p id="page-subtitle">
+                    Student management overview
+                </p>
+
+            </div>
+
+
+            <div class="status">
+
+                <span class="status-dot"></span>
+
+                System Online
+
+            </div>
+
+        </header>
+
+
+        <!-- ======================================
+             CONTENT
+        ======================================= -->
+
+        <div class="content">
+
+
+            <!-- ==================================
+                 DASHBOARD
+            =================================== -->
+
+            <section
+                id="dashboard"
+                class="section active"
+            >
+
+                <div class="stats-grid">
+
+
+                    <div class="stat-card">
+
+                        <div class="icon">
+                            👨‍🎓
+                        </div>
+
+                        <h3>
+                            Total Students
+                        </h3>
+
+                        <div
+                            class="value"
+                            id="total-students"
+                        >
+                            0
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="icon">
+                            📚
+                        </div>
+
+                        <h3>
+                            Courses
+                        </h3>
+
+                        <div
+                            class="value"
+                            id="total-courses"
+                        >
+                            0
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="icon">
+                            ⭐
+                        </div>
+
+                        <h3>
+                            Average Marks
+                        </h3>
+
+                        <div
+                            class="value"
+                            id="average-marks"
+                        >
+                            0
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="icon">
+                            💰
+                        </div>
+
+                        <h3>
+                            Total Fees
+                        </h3>
+
+                        <div
+                            class="value"
+                            id="total-fees"
+                        >
+                            ₹0
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <h2>
+                                Recent Students
+                            </h2>
+
+                            <p>
+                                Latest student records
+                            </p>
+
+                        </div>
+
+
+                        <button
+                            class="btn btn-primary"
+                            onclick="showSection('students')"
+                        >
+                            View All
+                        </button>
+
+                    </div>
+
+
+                    <div id="recent-students">
+
+                        <div class="loading">
+
+                            <div class="spinner"></div>
+
+                            Loading students...
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ==================================
+                 ADD STUDENT
+            =================================== -->
+
+            <section
+                id="add"
+                class="section"
+            >
+
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <h2>
+                                Add New Student
+                            </h2>
+
+                            <p>
+                                Enter student information
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <form
+                        id="student-form"
+                        onsubmit="addStudent(event)"
+                    >
+
+                        <div class="form-grid">
+
+
+                            <div class="form-group">
+
+                                <label for="addUSN">
+                                    USN *
+                                </label>
+
+                                <input
+                                    type="number"
+                                    id="addUSN"
+                                    min="1"
+                                    placeholder="Enter USN"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="addName">
+                                    Student Name *
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="addName"
+                                    placeholder="Enter student name"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="addAge">
+                                    Age *
+                                </label>
+
+                                <input
+                                    type="number"
+                                    id="addAge"
+                                    min="1"
+                                    max="100"
+                                    placeholder="Enter age"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="addMarks">
+                                    Marks *
+                                </label>
+
+                                <input
+                                    type="number"
+                                    id="addMarks"
+                                    min="0"
+                                    max="100"
+                                    step="0.01"
+                                    placeholder="0 - 100"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="addFees">
+                                    Fees *
+                                </label>
+
+                                <input
+                                    type="number"
+                                    id="addFees"
+                                    min="0"
+                                    step="0.01"
+                                    placeholder="Enter fees"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="addCourse">
+                                    Course *
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="addCourse"
+                                    placeholder="Example: AIML"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-actions">
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                                id="add-btn"
+                            >
+                                ➕ Add Student
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="btn btn-secondary"
+                                onclick="resetStudentForm()"
+                            >
+                                Clear
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </section>
+
+
+            <!-- ==================================
+                 STUDENTS
+            =================================== -->
+
+            <section
+                id="students"
+                class="section"
+            >
+
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <h2>
+                                All Students
+                            </h2>
+
+                            <p>
+                                Complete student database
+                            </p>
+
+                        </div>
+
+
+                        <button
+                            class="btn btn-primary"
+                            onclick="loadStudents()"
+                        >
+                            🔄 Refresh
+                        </button>
+
+                    </div>
+
+
+                    <div id="student-table">
+
+                        <div class="loading">
+
+                            <div class="spinner"></div>
+
+                            Loading students...
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ==================================
+                 SEARCH
+            =================================== -->
+
+            <section
+                id="search"
+                class="section"
+            >
+
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <h2>
+                                Search Student
+                            </h2>
+
+                            <p>
+                                Find a student using their USN
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="search-box">
+
+                        <input
+                            type="number"
+                            id="searchUSN"
+                            placeholder="Enter Student USN"
+                            min="1"
+                        >
+
+
+                        <button
+                            class="btn btn-primary"
+                            onclick="searchStudent()"
+                        >
+                            🔍 Search
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="card"
+                    id="search-result"
+                >
+
+                    <div class="empty">
+
+                        <div class="empty-icon">
+                            🔍
+                        </div>
+
+                        <p>
+                            Enter a USN to search for a student.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ==================================
+                 DELETE
+            =================================== -->
+
+            <section
+                id="delete"
+                class="section"
+            >
+
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <h2>
+                                Delete Student
+                            </h2>
+
+                            <p>
+                                Remove a student from the database
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="search-box">
+
+                        <input
+                            type="number"
+                            id="deleteUSN"
+                            placeholder="Enter Student USN"
+                            min="1"
+                        >
+
+
+                        <button
+                            class="btn btn-danger"
+                            onclick="confirmDelete()"
+                        >
+                            🗑️ Delete Student
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ==================================
+                 INSIGHTS
+            =================================== -->
+
+            <section
+                id="insights"
+                class="section"
+            >
+
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <h2>
+                                Student Insights
+                            </h2>
+
+                            <p>
+                                Academic performance and analytics
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="search-box">
+
+                        <input
+                            type="number"
+                            id="insightUSN"
+                            placeholder="Enter Student USN"
+                            min="1"
+                        >
+
+
+                        <button
+                            class="btn btn-primary"
+                            onclick="openInsights()"
+                        >
+                            📈 View Insights
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="insight-content"
+                >
+
+                    <div class="empty">
+
+                        <div class="empty-icon">
+                            📊
+                        </div>
+
+                        <p>
+                            Enter a USN to view student insights.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<!-- ==========================================
+     DELETE MODAL
+=========================================== -->
+
+<div
+    class="modal"
+    id="delete-modal"
+>
+
+    <div class="modal-content">
+
+        <h2>
+            Delete Student?
+        </h2>
+
+        <p id="delete-message">
+
+            Are you sure you want to delete
+            this student?
+
+        </p>
+
+
+        <div class="modal-actions">
+
+            <button
+                class="btn btn-secondary"
+                onclick="closeDeleteModal()"
+            >
+                Cancel
+            </button>
+
+
+            <button
+                class="btn btn-danger"
+                onclick="deleteStudent()"
+            >
+                Delete
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================
+     TOAST
+=========================================== -->
+
+<div id="toast-container"></div>
+
+
+<!-- ==========================================
+     JAVASCRIPT
+=========================================== -->
+
+<script>
+
+
+/* ==========================================
+   GLOBAL VARIABLES
+========================================== */
+
+let students = [];
+
+let charts = {};
+
+let deleteUSNValue = null;
+
+
+/* ==========================================
+   SECTION TITLES
+========================================== */
+
+const sectionInfo = {
+
+    dashboard: {
+        title: "Dashboard",
+        subtitle:
+            "Student management overview"
+    },
+
+    add: {
+        title: "Add Student",
+        subtitle:
+            "Create a new student record"
+    },
+
+    students: {
+        title: "Students",
+        subtitle:
+            "View all student records"
+    },
+
+    search: {
+        title: "Search Student",
+        subtitle:
+            "Find student information"
+    },
+
+    delete: {
+        title: "Delete Student",
+        subtitle:
+            "Remove a student record"
+    },
+
+    insights: {
+        title: "Student Insights",
+        subtitle:
+            "Academic performance and analytics"
+    }
+
+};
+
+
+/* ==========================================
+   SHOW SECTION
+========================================== */
+
+function showSection(sectionID) {
+
+    document
+        .querySelectorAll(".section")
+        .forEach(section => {
+
+            section.classList.remove(
+                "active"
+            );
+
+        });
+
+
+    document
+        .getElementById(sectionID)
+        .classList.add("active");
+
+
+    document
+        .querySelectorAll(".nav-btn")
+        .forEach(button => {
+
+            button.classList.remove(
+                "active"
+            );
+
+        });
+
+
+    const activeButton =
+        document.querySelector(
+            `.nav-btn[data-section="${sectionID}"]`
+        );
+
+
+    if (activeButton) {
+
+        activeButton.classList.add(
+            "active"
+        );
+
+    }
+
+
+    document
+        .getElementById("page-title")
+        .textContent =
+        sectionInfo[sectionID].title;
+
+
+    document
+        .getElementById("page-subtitle")
+        .textContent =
+        sectionInfo[sectionID].subtitle;
+
+
+    closeSidebar();
+
+
+    if (sectionID === "dashboard") {
+
+        loadDashboard();
+
+    }
+
+
+    if (sectionID === "students") {
+
+        loadStudents();
+
+    }
+
+}
+
+
+/* ==========================================
+   SIDEBAR
+========================================== */
+
+function toggleSidebar() {
+
+    document
+        .getElementById("sidebar")
+        .classList.toggle("open");
+
+}
+
+
+function closeSidebar() {
+
+    document
+        .getElementById("sidebar")
+        .classList.remove("open");
+
+}
+
+
+/* ==========================================
+   TOAST
+========================================== */
+
+function showToast(
+    message,
+    type = "success"
+) {
+
+    const container =
+        document.getElementById(
+            "toast-container"
+        );
+
+
+    const toast =
+        document.createElement("div");
+
+
+    toast.className =
+        `toast ${type}`;
+
+
+    toast.textContent = message;
+
+
+    container.appendChild(toast);
+
+
+    setTimeout(() => {
+
+        toast.remove();
+
+    }, 3500);
+
+}
+
+
+/* ==========================================
+   API HELPER
+========================================== */
+
+async function apiRequest(
+    url,
+    options = {}
+) {
+
+    try {
+
+        const response =
+            await fetch(
+                url,
+                options
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                `HTTP Error ${response.status}`
+            );
+
+        }
+
+
+        return await response.json();
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        throw error;
+
+    }
+
+}
+
+
+/* ==========================================
+   LOAD ALL STUDENTS
+========================================== */
+
+async function loadStudents() {
+
+    const container =
+        document.getElementById(
+            "student-table"
+        );
+
+
+    container.innerHTML = `
+
+        <div class="loading">
+
+            <div class="spinner"></div>
+
+            Loading students...
+
+        </div>
+
+    `;
+
+
+    try {
+
+        students =
+            await apiRequest(
+                "/api/students"
+            );
+
+
+        students.sort(
+            (a, b) =>
+                a.USN - b.USN
+        );
+
+
+        renderStudentTable(
+            students
+        );
+
+
+        updateDashboardStats();
+
+    }
+
+    catch (error) {
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    ⚠️
+                </div>
+
+                <p>
+                    Unable to load students.
+                </p>
+
+            </div>
+
+        `;
+
+
+        showToast(
+            "Unable to load student data.",
+            "error"
+        );
+
+    }
+
+}
+
+
+/* ==========================================
+   RENDER STUDENT TABLE
+========================================== */
+
+function renderStudentTable(data) {
+
+    const container =
+        document.getElementById(
+            "student-table"
+        );
+
+
+    if (!data || data.length === 0) {
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    👨‍🎓
+                </div>
+
+                <p>
+                    No students found.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    let html = `
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>USN</th>
+                        <th>Name</th>
+                        <th>Age</th>
+                        <th>Marks</th>
+                        <th>Fees</th>
+                        <th>Course</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+    `;
+
+
+    data.forEach(student => {
+
+        html += `
+
+            <tr>
+
+                <td>
+                    <strong>
+                        ${escapeHTML(student.USN)}
+                    </strong>
+                </td>
+
+                <td>
+                    ${escapeHTML(student.Name)}
+                </td>
+
+                <td>
+                    ${escapeHTML(student.Age)}
+                </td>
+
+                <td>
+                    ${escapeHTML(student.Marks)}
+                </td>
+
+                <td>
+                    ₹${formatNumber(student.Fees)}
+                </td>
+
+                <td>
+
+                    <span class="badge">
+
+                        ${escapeHTML(
+                            student.Course
+                        )}
+
+                    </span>
+
+                </td>
+
+            </tr>
+
+        `;
+
+    });
+
+
+    html += `
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    `;
+
+
+    container.innerHTML = html;
+
+}
+
+
+/* ==========================================
+   ADD STUDENT
+========================================== */
+
+async function addStudent(event) {
+
+    event.preventDefault();
+
+
+    const usn =
+        Number(
+            document
+                .getElementById("addUSN")
+                .value
+        );
+
+
+    const name =
+        document
+            .getElementById("addName")
+            .value
+            .trim();
+
+
+    const age =
+        Number(
+            document
+                .getElementById("addAge")
+                .value
+        );
+
+
+    const marks =
+        Number(
+            document
+                .getElementById("addMarks")
+                .value
+        );
+
+
+    const fees =
+        Number(
+            document
+                .getElementById("addFees")
+                .value
+        );
+
+
+    const course =
+        document
+            .getElementById("addCourse")
+            .value
+            .trim();
+
+
+    /* --------------------------------------
+       VALIDATION
+    -------------------------------------- */
+
+    if (!usn || usn < 1) {
+
+        showToast(
+            "Please enter a valid USN.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if (!name) {
+
+        showToast(
+            "Please enter the student name.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if (!age || age < 1 || age > 100) {
+
+        showToast(
+            "Please enter a valid age.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if (
+        marks < 0 ||
+        marks > 100 ||
+        isNaN(marks)
+    ) {
+
+        showToast(
+            "Marks must be between 0 and 100.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if (
+        fees < 0 ||
+        isNaN(fees)
+    ) {
+
+        showToast(
+            "Please enter valid fees.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if (!course) {
+
+        showToast(
+            "Please enter the course.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const button =
+        document.getElementById(
+            "add-btn"
+        );
+
+
+    button.disabled = true;
+
+    button.innerHTML =
+        "⏳ Adding...";
+
+
+    try {
+
+        const result =
+            await apiRequest(
+                "/api/add",
+                {
+
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            USN: usn,
+
+                            Name: name,
+
+                            Age: age,
+
+                            Marks: marks,
+
+                            Fees: fees,
+
+                            Course: course
+
+                        })
+
+                }
+            );
+
+
+        if (!result.success) {
+
+            showToast(
+                result.message,
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        showToast(
+            "Student added successfully!"
+        );
+
+
+        resetStudentForm();
+
+
+        await loadStudents();
+
+        await loadDashboard();
+
+
+        showSection(
+            "students"
+        );
+
+    }
+
+    catch (error) {
+
+        showToast(
+            "Unable to add student.",
+            "error"
+        );
+
+    }
+
+    finally {
+
+        button.disabled = false;
+
+        button.innerHTML =
+            "➕ Add Student";
+
+    }
+
+}
+
+
+/* ==========================================
+   RESET FORM
+========================================== */
+
+function resetStudentForm() {
+
+    document
+        .getElementById(
+            "student-form"
+        )
+        .reset();
+
+}
+
+
+/* ==========================================
+   SEARCH STUDENT
+========================================== */
+
+async function searchStudent() {
+
+    const usn =
+        Number(
+            document
+                .getElementById(
+                    "searchUSN"
+                )
+                .value
+        );
+
+
+    const resultBox =
+        document.getElementById(
+            "search-result"
+        );
+
+
+    if (!usn || usn < 1) {
+
+        showToast(
+            "Please enter a valid USN.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    resultBox.innerHTML = `
+
+        <div class="loading">
+
+            <div class="spinner"></div>
+
+            Searching...
+
+        </div>
+
+    `;
+
+
+    try {
+
+        const result =
+            await apiRequest(
+                `/api/search/${usn}`
+            );
+
+
+        if (!result.success) {
+
+            resultBox.innerHTML = `
+
+                <div class="empty">
+
+                    <div class="empty-icon">
+                        ❌
+                    </div>
+
+                    <p>
+                        ${escapeHTML(
+                            result.message
+                        )}
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        const student =
+            result.student;
+
+
+        resultBox.innerHTML = `
+
+            <div class="card-header">
+
+                <div>
+
+                    <h2>
+                        Student Found
+                    </h2>
+
+                    <p>
+                        Student information
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>USN</th>
+                            <th>Name</th>
+                            <th>Age</th>
+                            <th>Marks</th>
+                            <th>Fees</th>
+                            <th>Course</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        <tr>
+
+                            <td>
+                                <strong>
+                                    ${escapeHTML(
+                                        student.USN
+                                    )}
+                                </strong>
+                            </td>
+
+                            <td>
+                                ${escapeHTML(
+                                    student.Name
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeHTML(
+                                    student.Age
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeHTML(
+                                    student.Marks
+                                )}
+                            </td>
+
+                            <td>
+                                ₹${formatNumber(
+                                    student.Fees
+                                )}
+                            </td>
+
+                            <td>
+
+                                <span class="badge">
+
+                                    ${escapeHTML(
+                                        student.Course
+                                    )}
+
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        `;
+
+    }
+
+    catch (error) {
+
+        resultBox.innerHTML = `
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    ⚠️
+                </div>
+
+                <p>
+                    Search failed.
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+/* ==========================================
+   CONFIRM DELETE
+========================================== */
+
+async function confirmDelete() {
+
+    const usn =
+        Number(
+            document
+                .getElementById(
+                    "deleteUSN"
+                )
+                .value
+        );
+
+
+    if (!usn || usn < 1) {
+
+        showToast(
+            "Please enter a valid USN.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        const result =
+            await apiRequest(
+                `/api/search/${usn}`
+            );
+
+
+        if (!result.success) {
+
+            showToast(
+                "Student not found.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        deleteUSNValue = usn;
+
+
+        document
+            .getElementById(
+                "delete-message"
+            )
+            .textContent =
+
+            `Are you sure you want to delete `
+            + `${result.student.Name} `
+            + `(USN: ${usn})? `
+            + `This action cannot be undone.`;
+
+
+        document
+            .getElementById(
+                "delete-modal"
+            )
+            .classList.add("show");
+
+    }
+
+    catch (error) {
+
+        showToast(
+            "Unable to find student.",
+            "error"
+        );
+
+    }
+
+}
+
+
+/* ==========================================
+   CLOSE DELETE MODAL
+========================================== */
+
+function closeDeleteModal() {
+
+    document
+        .getElementById(
+            "delete-modal"
+        )
+        .classList.remove(
+            "show"
+        );
+
+    deleteUSNValue = null;
+
+}
+
+
+/* ==========================================
+   DELETE STUDENT
+========================================== */
+
+async function deleteStudent() {
+
+    if (!deleteUSNValue) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const result =
+            await apiRequest(
+                `/api/delete/${deleteUSNValue}`,
+                {
+
+                    method: "DELETE"
+
+                }
+            );
+
+
+        closeDeleteModal();
+
+
+        if (!result.success) {
+
+            showToast(
+                result.message,
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        showToast(
+            "Student deleted successfully!"
+        );
+
+
+        document
+            .getElementById(
+                "deleteUSN"
+            )
+            .value = "";
+
+
+        await loadStudents();
+
+        await loadDashboard();
+
+    }
+
+    catch (error) {
+
+        closeDeleteModal();
+
+        showToast(
+            "Unable to delete student.",
+            "error"
+        );
+
+    }
+
+}
+
+
+/* ==========================================
+   DASHBOARD
+========================================== */
+
+async function loadDashboard() {
+
+    try {
+
+        students =
+            await apiRequest(
+                "/api/students"
+            );
+
+
+        students.sort(
+            (a, b) =>
+                a.USN - b.USN
+        );
+
+
+        updateDashboardStats();
+
+        renderRecentStudents();
+
+    }
+
+    catch (error) {
+
+        showToast(
+            "Unable to load dashboard.",
+            "error"
+        );
+
+    }
+
+}
+
+
+/* ==========================================
+   DASHBOARD STATS
+========================================== */
+
+function updateDashboardStats() {
+
+    const total =
+        students.length;
+
+
+    const courses =
+        new Set(
+            students.map(
+                student =>
+                    student.Course
+            )
+        ).size;
+
+
+    const averageMarks =
+        total > 0
+
+            ? students.reduce(
+                (sum, student) =>
+                    sum +
+                    Number(student.Marks),
+                0
+            ) / total
+
+            : 0;
+
+
+    const totalFees =
+        students.reduce(
+            (sum, student) =>
+                sum +
+                Number(student.Fees),
+            0
+        );
+
+
+    document
+        .getElementById(
+            "total-students"
+        )
+        .textContent = total;
+
+
+    document
+        .getElementById(
+            "total-courses"
+        )
+        .textContent = courses;
+
+
+    document
+        .getElementById(
+            "average-marks"
+        )
+        .textContent =
+        averageMarks.toFixed(2);
+
+
+    document
+        .getElementById(
+            "total-fees"
+        )
+        .textContent =
+        "₹" +
+        formatNumber(
+            totalFees
+        );
+
+}
+
+
+/* ==========================================
+   RECENT STUDENTS
+========================================== */
+
+function renderRecentStudents() {
+
+    const container =
+        document.getElementById(
+            "recent-students"
+        );
+
+
+    if (students.length === 0) {
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    👨‍🎓
+                </div>
+
+                <p>
+                    No students available.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    const recent =
+        students.slice(-5).reverse();
+
+
+    let html = `
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>USN</th>
+                        <th>Name</th>
+                        <th>Marks</th>
+                        <th>Course</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+    `;
+
+
+    recent.forEach(student => {
+
+        html += `
+
+            <tr>
+
+                <td>
+                    ${escapeHTML(
+                        student.USN
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHTML(
+                        student.Name
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHTML(
+                        student.Marks
+                    )}
+                </td>
+
+                <td>
+
+                    <span class="badge">
+
+                        ${escapeHTML(
+                            student.Course
+                        )}
+
+                    </span>
+
+                </td>
+
+            </tr>
+
+        `;
+
+    });
+
+
+    html += `
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    `;
+
+
+    container.innerHTML = html;
+
+}
+
+
+/* ==========================================
+   STUDENT INSIGHTS
+========================================== */
+
+async function openInsights() {
+
+    const usn =
+        Number(
+            document
+                .getElementById(
+                    "insightUSN"
+                )
+                .value
+        );
+
+
+    const container =
+        document.getElementById(
+            "insight-content"
+        );
+
+
+    if (!usn || usn < 1) {
+
+        showToast(
+            "Please enter a valid USN.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    container.innerHTML = `
+
+        <div class="loading">
+
+            <div class="spinner"></div>
+
+            Loading student insights...
+
+        </div>
+
+    `;
+
+
+    try {
+
+        const result =
+            await apiRequest(
+                `/api/insights/${usn}`
+            );
+
+
+        if (!result.success) {
+
+            container.innerHTML = `
+
+                <div class="card">
+
+                    <div class="empty">
+
+                        <div class="empty-icon">
+                            ❌
+                        </div>
+
+                        <p>
+                            ${escapeHTML(
+                                result.message
+                            )}
+                        </p>
+
+                    </div>
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        renderInsights(
+            result.insights
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+
+        container.innerHTML = `
+
+            <div class="card">
+
+                <div class="empty">
+
+                    <div class="empty-icon">
+                        ⚠️
+                    </div>
+
+                    <p>
+                        Unable to load insights.
+                    </p>
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+/* ==========================================
+   RENDER INSIGHTS
+========================================== */
+
+function renderInsights(data) {
+
+    const student =
+        data.student;
+
+
+    const container =
+        document.getElementById(
+            "insight-content"
+        );
+
+
+    container.innerHTML = `
+
+        <!-- STUDENT HEADER -->
+
+        <div class="insight-header">
+
+            <h2>
+                ${escapeHTML(
+                    student.Name
+                )}
+            </h2>
+
+            <p>
+
+                USN:
+                ${escapeHTML(
+                    student.USN
+                )}
+
+                &nbsp; • &nbsp;
+
+                Course:
+                ${escapeHTML(
+                    student.Course
+                )}
+
+            </p>
+
+        </div>
+
+
+        <!-- INSIGHT STATS -->
+
+        <div class="insight-stats">
+
+
+            <div class="insight-stat">
+
+                <span>
+                    Marks
+                </span>
+
+                <strong>
+                    ${student.Marks}
+                </strong>
+
+            </div>
+
+
+            <div class="insight-stat">
+
+                <span>
+                    Grade
+                </span>
+
+                <strong>
+                    ${escapeHTML(
+                        data.grade
+                    )}
+                </strong>
+
+            </div>
+
+
+            <div class="insight-stat">
+
+                <span>
+                    Percentage
+                </span>
+
+                <strong>
+                    ${data.percentage}%
+                </strong>
+
+            </div>
+
+
+            <div class="insight-stat">
+
+                <span>
+                    Course Average
+                </span>
+
+                <strong>
+                    ${data.course_average}
+                </strong>
+
+            </div>
+
+
+            <div class="insight-stat">
+
+                <span>
+                    Course Rank
+                </span>
+
+                <strong>
+                    #${data.rank}
+                </strong>
+
+            </div>
+
+
+            <div class="insight-stat">
+
+                <span>
+                    Total Students
+                </span>
+
+                <strong>
+                    ${data.total_students}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- RESULT -->
+
+        <div class="card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <h2>
+                        Academic Result
+                    </h2>
+
+                    <p>
+                        Comparison with course average
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <h3>
+
+                ${escapeHTML(
+                    data.average_result
+                )}
+
+            </h3>
+
+        </div>
+
+
+        <!-- CHARTS -->
+
+        <div class="charts-grid">
+
+
+            <!-- MARKS -->
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h2>
+                            Marks
+                        </h2>
+
+                        <p>
+                            Individual student marks
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="chart-container">
+
+                    <canvas
+                        id="marksChart"
+                    ></canvas>
+
+                </div>
+
+            </div>
+
+
+            <!-- FEES -->
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h2>
+                            Fees
+                        </h2>
+
+                        <p>
+                            Student fee information
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="chart-container">
+
+                    <canvas
+                        id="feesChart"
+                    ></canvas>
+
+                </div>
+
+            </div>
+
+
+            <!-- AGE -->
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h2>
+                            Age
+                        </h2>
+
+                        <p>
+                            Student age
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="chart-container">
+
+                    <canvas
+                        id="ageChart"
+                    ></canvas>
+
+                </div>
+
+            </div>
+
+
+            <!-- COURSE COMPARISON -->
+
+            <div class="card chart-full">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <h2>
+                            Course Marks Comparison
+                        </h2>
+
+                        <p>
+                            Student performance in
+                            ${escapeHTML(
+                                student.Course
+                            )}
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="chart-container">
+
+                    <canvas
+                        id="courseChart"
+                    ></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    createCharts(data);
+
+}
+
+
+/* ==========================================
+   CREATE CHARTS
+========================================== */
+
+function createCharts(data) {
+
+    destroyCharts();
+
+
+    const student =
+        data.student;
+
+
+    /* ======================================
+       MARKS
+    ====================================== */
+
+    charts.marks =
+        new Chart(
+
+            document.getElementById(
+                "marksChart"
+            ),
+
+            {
+
+                type: "bar",
+
+                data: {
+
+                    labels: [
+                        student.Name
+                    ],
+
+                    datasets: [
+
+                        {
+
+                            label: "Marks",
+
+                            data: [
+                                student.Marks
+                            ],
+
+                            borderWidth: 1
+
+                        }
+
+                    ]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    scales: {
+
+                        y: {
+
+                            beginAtZero: true,
+
+                            max: 100
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        );
+
+
+    /* ======================================
+       FEES
+    ====================================== */
+
+    charts.fees =
+        new Chart(
+
+            document.getElementById(
+                "feesChart"
+            ),
+
+            {
+
+                type: "bar",
+
+                data: {
+
+                    labels: [
+                        student.Name
+                    ],
+
+                    datasets: [
+
+                        {
+
+                            label: "Fees",
+
+                            data: [
+                                student.Fees
+                            ],
+
+                            borderWidth: 1
+
+                        }
+
+                    ]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    scales: {
+
+                        y: {
+
+                            beginAtZero: true
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        );
+
+
+    /* ======================================
+       AGE
+    ====================================== */
+
+    charts.age =
+        new Chart(
+
+            document.getElementById(
+                "ageChart"
+            ),
+
+            {
+
+                type: "bar",
+
+                data: {
+
+                    labels: [
+                        student.Name
+                    ],
+
+                    datasets: [
+
+                        {
+
+                            label: "Age",
+
+                            data: [
+                                student.Age
+                            ],
+
+                            borderWidth: 1
+
+                        }
+
+                    ]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    scales: {
+
+                        y: {
+
+                            beginAtZero: true
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        );
+
+
+    /* ======================================
+       COURSE COMPARISON
+    ====================================== */
+
+    const courseStudents =
+        data.course_students || [];
+
+
+    charts.course =
+        new Chart(
+
+            document.getElementById(
+                "courseChart"
+            ),
+
+            {
+
+                type: "bar",
+
+                data: {
+
+                    labels:
+
+                        courseStudents.map(
+                            s =>
+                                `${s.Name} (${s.USN})`
+                        ),
+
+                    datasets: [
+
+                        {
+
+                            label:
+                                "Marks",
+
+                            data:
+
+                                courseStudents.map(
+                                    s =>
+                                        s.Marks
+                                ),
+
+                            borderWidth: 1
+
+                        }
+
+                    ]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    scales: {
+
+                        y: {
+
+                            beginAtZero: true,
+
+                            max: 100,
+
+                            title: {
+
+                                display: true,
+
+                                text: "Marks"
+
+                            }
+
+                        },
+
+                        x: {
+
+                            title: {
+
+                                display: true,
+
+                                text:
+                                    "Student"
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        );
+
+}
+
+
+/* ==========================================
+   DESTROY CHARTS
+========================================== */
+
+function destroyCharts() {
+
+    Object.values(charts)
+        .forEach(chart => {
+
+            if (chart) {
+
+                chart.destroy();
+
+            }
+
+        });
+
+
+    charts = {};
+
+}
+
+
+/* ==========================================
+   FORMAT NUMBER
+========================================== */
+
+function formatNumber(number) {
+
+    return Number(number)
+        .toLocaleString(
+            "en-IN",
+            {
+                maximumFractionDigits: 2
+            }
+        );
+
+}
+
+
+/* ==========================================
+   ESCAPE HTML
+========================================== */
+
+function escapeHTML(value) {
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+
+    div.textContent =
+        String(value);
+
+
+    return div.innerHTML;
+
+}
+
+
+/* ==========================================
+   INITIALIZE APPLICATION
+========================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        loadDashboard();
+
+    }
+);
+
+
+/* ==========================================
+   ENTER KEY SEARCH
+========================================== */
+
+document
+    .getElementById("searchUSN")
+    .addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key === "Enter"
+            ) {
+
+                searchStudent();
+
+            }
+
+        }
+    );
+
+
+document
+    .getElementById("deleteUSN")
+    .addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key === "Enter"
+            ) {
+
+                confirmDelete();
+
+            }
+
+        }
+    );
+
+
+document
+    .getElementById("insightUSN")
+    .addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key === "Enter"
+            ) {
+
+                openInsights();
+
+            }
+
+        }
+    );
+
+
+/* ==========================================
+   CLOSE MODAL WHEN CLICKING OUTSIDE
+========================================== */
+
+document
+    .getElementById("delete-modal")
+    .addEventListener(
+        "click",
+        event => {
+
+            if (
+                event.target.id ===
+                "delete-modal"
+            ) {
+
+                closeDeleteModal();
+
+            }
+
+        }
+    );
+
+
+</script>
+
+
+</body>
+
+</html>

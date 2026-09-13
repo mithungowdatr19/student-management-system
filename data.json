@@ -1,0 +1,42 @@
+[
+    {
+        "USN": 2,
+        "Name": "Mithun",
+        "Age": 21,
+        "Marks": 56.0,
+        "Fees": 67899.0,
+        "Course": "AIML"
+    },
+    {
+        "USN": 4,
+        "Name": "Dushyanth",
+        "Age": 21,
+        "Marks": 89.0,
+        "Fees": 78999.0,
+        "Course": "AIML"
+    },
+    {
+        "USN": 5,
+        "Name": "Shoaib",
+        "Age": 21,
+        "Marks": 81.0,
+        "Fees": 78999.0,
+        "Course": "AIML"
+    },
+    {
+        "USN": 3,
+        "Name": "Sharath",
+        "Age": 21,
+        "Marks": 79.0,
+        "Fees": 78999.0,
+        "Course": "AIML"
+    },
+    {
+        "USN": 1,
+        "Name": "Rakesh",
+        "Age": 21,
+        "Marks": 67.0,
+        "Fees": 78999.0,
+        "Course": "AIML"
+    }
+]
