@@ -38,5 +38,13 @@
         "Marks": 67.0,
         "Fees": 78999.0,
         "Course": "AIML"
+    },
+    {
+        "USN": 6,
+        "Name": "Manoj",
+        "Age": 21,
+        "Marks": 78.0,
+        "Fees": 56788.0,
+        "Course": "CS"
     }
 ]
