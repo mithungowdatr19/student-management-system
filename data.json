@@ -62,5 +62,13 @@
         "Marks": 78.0,
         "Fees": 67888.0,
         "Course": "CS"
+    },
+    {
+        "USN": 9,
+        "Name": "Sashi",
+        "Age": 21,
+        "Marks": 78.0,
+        "Fees": 67555.0,
+        "Course": "CS"
     }
 ]
