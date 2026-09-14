@@ -46,5 +46,21 @@
         "Marks": 78.0,
         "Fees": 56788.0,
         "Course": "CS"
+    },
+    {
+        "USN": 7,
+        "Name": "Preetham",
+        "Age": 21,
+        "Marks": 67.0,
+        "Fees": 78999.0,
+        "Course": "CS"
+    },
+    {
+        "USN": 8,
+        "Name": "Rohit",
+        "Age": 21,
+        "Marks": 78.0,
+        "Fees": 67888.0,
+        "Course": "CS"
     }
 ]
